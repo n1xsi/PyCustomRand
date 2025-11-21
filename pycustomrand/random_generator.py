@@ -1,4 +1,4 @@
-from .custom_round import normal_round
+from .custom_round import true_round
 import time
 
 
@@ -19,7 +19,7 @@ class PseudoRandom:
 	
 	@staticmethod
 	def random_from_range(start, end):
-		return normal_round((end-start)*(PseudoRandom.random())+start)
+		return true_round((end-start)*(PseudoRandom.random())+start)
 	
 	@staticmethod
 	def random_from_float_range(start, end):
@@ -27,7 +27,7 @@ class PseudoRandom:
 	
 	@staticmethod
 	def choice(array):
-		return array[PseudoRandom.random_from_range(0, len(array)-1)]
+		return array[int(PseudoRandom.random_from_range(0, len(array)))]
 	
 	@staticmethod
 	def shuffle(array):
