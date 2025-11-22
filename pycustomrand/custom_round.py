@@ -3,15 +3,21 @@ def true_round(number: float, length=0) -> float:
 	digits = list(map(int, str(number).split('.')[1]))
     
 	# Проход по цифрам в обратном порядке, начиная с той, которая находится на позиции length + 1
-	for i in range(len(digits)-length, -1, -1):
+	for i in range(len(digits)-1, length-1, -1):
+		# Если цифра на текущей позиции >= 5, то увеличиваем предыдущую цифру на 1 - правило округления
 		if digits[i] >= 5:
 			digits[i-1] += 1
+			# Обработка случая, когда происходит "перенос" из-за округления
+			if digits[i-1] == 10:
+				digits[i-2] += 1
+				digits[i-1] = 0
 			digits[i] = 0
     
     # Если кол-во знаков после запятой (length) не было задано
 	if length == 0:
 		# Тогда округляем до целого числа (+1 к числу, если первая цифра после запятой >= 5)
-		return float(str(number)[0]) + (1 if digits[0] >= 5 else 0)
+  		# используем split('.')[0], чтобы сохранить знак перед числом (+/-)
+		return float(str(number).split('.')[0]) + (1 if digits[0] >= 5 else 0)
 	else:
 		# Иначе формируем и возвращаем число с заданным кол-вом знаков после запятой
-		return float(str(number)[0] + '.' + ''.join(map(str, digits[:length])))
+		return float(str(number).split('.')[0] + '.' + ''.join(map(str, digits[:length])))
