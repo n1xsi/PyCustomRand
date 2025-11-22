@@ -1,5 +1,5 @@
 from .custom_round import true_round
-import time
+from time import sleep, time_ns
 
 
 class PseudoRandom:
@@ -7,10 +7,12 @@ class PseudoRandom:
 	def get_random_number(length=1):
 		number = ''
 		while len(number) != length:
-            # magic starts here
-			number += (str(int(((int(str(int((time.time_ns()*1.71)/0.8))[::-1])**0.5)*7)/9))[-1])
+            # Генерация псевдослучайной цифры на основе текущего времени и "волшебных" математических операций
+			number += str(int(((int(str(int((time_ns()*1.71)/0.8))[::-1])**0.5)*7)/9))[-1]
+			# Убираем возможные ведущие нули
 			number = str(int(number))
-			time.sleep(0.001)
+			# Небольшая задержка для изменения времени
+			sleep(0.0001)
 		return int(number)
 
 	@staticmethod
