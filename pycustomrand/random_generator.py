@@ -32,6 +32,5 @@ class PseudoRandom:
 	@staticmethod
 	def shuffle(array):
 		for _ in range(len(array)*2):
-			x1, x2 = PseudoRandom.random_from_range(0, len(array)-1), PseudoRandom.random_from_range(0, len(array)-1)
+			x1, x2 = int(PseudoRandom.random_from_range(0, len(array)-1)), int(PseudoRandom.random_from_range(0, len(array)-1))
 			array[x1], array[x2] = array[x2], array[x1]
-		return array
