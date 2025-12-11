@@ -4,7 +4,7 @@ from time import sleep, time_ns
 
 class PseudoRandom:
 	@staticmethod
-	def get_random_number(length=1) -> int:
+	def get_random_number(length: int = 1) -> int:
 		""" Генерация псевдослучайного числа заданной длины """
 		number = ''
 		while len(number) != length:
@@ -36,12 +36,12 @@ class PseudoRandom:
 		return ((end-start)*(PseudoRandom.random())+start)
 	
 	@staticmethod
-	def choice(array):
+	def choice(array) -> None:
 		""" Возвращает случайно выбранный элемент из непустого массива """
 		return array[int(PseudoRandom.random_from_range(0, len(array)))]
 	
 	@staticmethod
-	def shuffle(array):
+	def shuffle(array) -> None:
 		""" Перемешивает массив на месте """
 		for _ in range(len(array)*2):
 			x1, x2 = int(PseudoRandom.random_from_range(0, len(array)-1)), int(PseudoRandom.random_from_range(0, len(array)-1))
