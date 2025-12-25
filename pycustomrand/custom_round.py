@@ -1,12 +1,14 @@
-def true_round(number, length: int = 0) -> float | int:
-    # Если пришёл int — сразу возвращаем int
+def true_round(number: float | int, length: int = 0) -> float | int:
+    # Если пришёл int - сразу возвращаем int
     if isinstance(number, int):
         return number
 
     # Получение цифр после запятой заданного числа
-    number = str(number).split('.')
+    number_parts = str(number).split('.')
+    # Определение знака числа
+    sign = -1 if number_parts[0][0] == '-' else 1
     # Создаём список цифр из числа (digits[0] - целая часть со знаком, digits[1] - дробная)
-    digits = [int(number[0])] + list(map(int, number[1]))
+    digits = [int(number_parts[0])*sign] + list(map(int, number_parts[1]))
 
     # Проход по цифрам в обратном порядке, начиная с той, что после нужного знака округления
     for i in range(len(digits)-1-(1 if length == 0 else 0), length-1-(1 if length == 0 else -1), -1):
