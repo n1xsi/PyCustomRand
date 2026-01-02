@@ -8,12 +8,20 @@ class PseudoRandom:
 		""" Генерация псевдослучайного числа заданной длины """
 		number = ''
 		while len(number) != length:
-            # Генерация псевдослучайной цифры на основе текущего времени и "волшебных" математических операций
-			number += str(int(((int(str(int((time_ns()*1.71)/0.8))[::-1])**0.5)*7)/9))[-1]
-			# Убираем возможные ведущие нули
+			# Генерация псевдослучайного числа на основе текущего времени и "волшебных" математических операций
+			calc_base = int((time_ns() * 1.71) / 0.8)
+			reversed_base = int(str(calc_base)[::-1])
+			magic_result = ((reversed_base ** 0.5) * 7) / 9
+
+			# Добавление последней цифры результата
+			number += str(int(magic_result))[-1]
+
+			# Устранение возможных ведущих нулей
 			number = str(int(number))
+
 			# Небольшая задержка для изменения времени
 			sleep(0.0001)
+
 		return int(number)
 
 	@staticmethod
@@ -43,6 +51,7 @@ class PseudoRandom:
 	@staticmethod
 	def shuffle(array) -> None:
 		""" Перемешивает массив на месте """
+		limit = len(array)-1
 		for _ in range(len(array)*2):
-			x1, x2 = int(PseudoRandom.random_from_range(0, len(array)-1)), int(PseudoRandom.random_from_range(0, len(array)-1))
+			x1, x2 = int(PseudoRandom.random_from_range(0, limit)), int(PseudoRandom.random_from_range(0, limit))
 			array[x1], array[x2] = array[x2], array[x1]
