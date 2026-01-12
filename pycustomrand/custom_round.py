@@ -8,6 +8,7 @@ def cascade_round(digits: list[int], index: int) -> None:
 
 
 def true_round(number: int | float, length: int = 0) -> int | float:
+    """Функция для честного округления числа number до заданного количества знаков после запятой length."""
     # Если пришёл int - сразу возвращаем int
     if isinstance(number, int):
         return number
@@ -18,11 +19,11 @@ def true_round(number: int | float, length: int = 0) -> int | float:
     sign = -1 if number_parts[0][0] == '-' else 1
     # Создаём список цифр из числа (digits[0] - целая часть со знаком, digits[1] - дробная)
     digits = [abs(int(number_parts[0]))] + list(map(int, number_parts[1]))
-    
+
     # Начало прохода: по цифрам в обратном порядке, начиная с той, что после нужного знака округления
-    start = len(digits)-1-(1 if length == 0 else 0)
+    start = len(digits) - 1 - (1 if length == 0 else 0)
     # Конец прохода: до первой цифры после запятой включительно (или до конца числа, если length == 0)
-    end = length-1-(-2 if length == 0 else -1)
+    end = length - 1 - (-2 if length == 0 else -1)
 
     # Проход по цифрам в обратном порядке (логика округления)
     for i in range(start, end, -1):
@@ -31,14 +32,14 @@ def true_round(number: int | float, length: int = 0) -> int | float:
             digits[i-1] += 1
             digits[i] = 0
             # Обработка каскадного округления
-            cascade_round(digits, i-1)
+            cascade_round(digits, i - 1)
     # Доп. обработка каскадного округления после цикла (на случай, если первая цифра после запятой стала 10)
     cascade_round(digits, 1)
 
     # Если кол-во знаков после запятой (length) не было задано
     if length == 0:
         # Тогда округляем до целого числа (+1 к числу, если первая цифра после запятой >= 5)
-        return (int(digits[0]) + (1 if digits[1] >= 5 else 0))*sign
+        return (int(digits[0]) + (1 if digits[1] >= 5 else 0)) * sign
     else:
         # Иначе формируем и возвращаем число с заданным кол-вом знаков после запятой
-        return float(f"{digits[0]}.{''.join(map(str, digits[1:length+1]))}")*sign
+        return float(f"{digits[0]}.{''.join(map(str, digits[1:length + 1]))}") * sign
