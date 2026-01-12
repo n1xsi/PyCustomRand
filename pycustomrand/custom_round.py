@@ -29,7 +29,7 @@ def true_round(number: int | float, length: int = 0) -> int | float:
     # Если кол-во знаков после запятой (length) не было задано
     if length == 0:
         # Тогда округляем до целого числа (+1 к числу, если первая цифра после запятой >= 5)
-        return (float(digits[0]) + (1 if digits[1] >= 5 else 0))*sign
+        return (int(digits[0]) + (1 if digits[1] >= 5 else 0))*sign
     else:
         # Иначе формируем и возвращаем число с заданным кол-вом знаков после запятой
         return float(f"{digits[0]}.{''.join(map(str, digits[1:length+1]))}")*sign
