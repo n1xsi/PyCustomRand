@@ -3,13 +3,45 @@ from time import sleep, time_ns
 
 
 class PseudoRandom:
+    # Переменная класса для хранения seed генератора псевдослучайных чисел
+    _seed = None
+
+    @classmethod
+    def set_seed(cls, seed=None) -> None:
+        """
+        Установка нового значения seed для генератора псевдослучайных чисел.
+
+        seed - любой объект, который можно преобразовать в строку.
+        """
+        if seed is not None:
+            cls._seed = sum(map(ord, str(seed)))
+
     @staticmethod
-    def get_random_number(length: int = 1) -> int:
+    def _get_next_seed_state(current_seed: int) -> int:
+        """ 
+        Вспомогательная функция - меняет состояние зерна.
+        Используется линейный конгруэнтный метод для сильного изменения зерна на каждом шаге.
+        (Константы взяты из Borland C/C++ runtime library)
+        """
+        return (current_seed * 22695477 + 1) & 0xFFFFFFFF
+
+    @classmethod
+    def get_random_number(cls, length: int = 1) -> int:
         """Генерация псевдослучайного числа заданной длины."""
         number = ''
         while len(number) != length:
-            # Генерация псевдослучайного числа на основе текущего времени и "волшебных" математических операций
-            calc_base = int((time_ns() * 1.71) / 0.8)
+            # Определение источника энтропии (время или seed)
+            if cls._seed is not None:
+                is_seeded = True
+                current_entropy = cls._seed
+                # Обновление seed для следующей итерации (цифры), иначе результат будет одинаковым
+                cls._seed = cls._get_next_seed_state(cls._seed)
+            else:
+                is_seeded = False
+                current_entropy = time_ns()
+
+            # Генерация псевдослучайного числа на основе текущей энтропии и "волшебных" математических операций
+            calc_base = int((current_entropy * 1.71) / 0.8)
             reversed_base = int(str(calc_base)[::-1])
             magic_result = ((reversed_base ** 0.5) * 7) / 9
 
@@ -19,8 +51,9 @@ class PseudoRandom:
             # Устранение возможных ведущих нулей
             number = str(int(number))
 
-            # Небольшая задержка для изменения времени
-            sleep(0.0001)
+            # Если нет seed, нужна задержка, чтобы время изменилось (т.к. entropy - время)
+            if not is_seeded:
+                sleep(0.0001)
 
         return int(number)
 
@@ -40,7 +73,7 @@ class PseudoRandom:
         Возвращает случайно выбранное число с плавающей точкой из диапазона [start, end)
 
         start, end - могут быть как целыми числами, так и числами с плавающей точкой
-		"""
+        """
         return ((end-start) * (PseudoRandom.random()) + start)
 
     @staticmethod
