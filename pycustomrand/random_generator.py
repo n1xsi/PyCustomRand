@@ -21,7 +21,7 @@ class PseudoRandom:
         """ 
         Вспомогательная функция - меняет состояние зерна.
         Используется линейный конгруэнтный метод для сильного изменения зерна на каждом шаге.
-        (Константы взяты из Borland C/C++ runtime library)
+        (Константы взяты из Borland C/C++ runtime library.)
         """
         return (current_seed * 22695477 + 1) & 0xFFFFFFFF
 
@@ -64,7 +64,7 @@ class PseudoRandom:
     @staticmethod
     def random_from_range(start: int, end: int) -> int:
         """Возвращает случайно выбранный элемент из диапазона [start, end)."""
-        return int(true_round((end - start) * (PseudoRandom.random()) + start))
+        return true_round((end - start) * (PseudoRandom.random()) + start)
 
     @staticmethod
     def random_from_float_range(start, end) -> float:
@@ -78,12 +78,12 @@ class PseudoRandom:
     @staticmethod
     def choice(array) -> None:
         """Возвращает случайно выбранный элемент из непустого массива."""
-        return array[int(PseudoRandom.random_from_range(0, len(array)))]
+        return array[PseudoRandom.random_from_range(0, len(array))]
 
     @staticmethod
     def shuffle(array) -> None:
         """Перемешивает массив на месте."""
         limit = len(array)-1
         for _ in range(len(array)*2):
-            x1, x2 = int(PseudoRandom.random_from_range(0, limit)), int(PseudoRandom.random_from_range(0, limit))
+            x1, x2 = PseudoRandom.random_from_range(0, limit), PseudoRandom.random_from_range(0, limit)
             array[x1], array[x2] = array[x2], array[x1]
