@@ -77,8 +77,11 @@ class PseudoRandom:
 
     @staticmethod
     def choice(array) -> None:
-        """Возвращает случайно выбранный элемент из непустого массива."""
-        return array[PseudoRandom.random_from_range(0, len(array))]
+        """Возвращает случайно выбранный элемент из массива."""
+        if not array:
+            return None
+        index = int(PseudoRandom.random() * len(array))
+        return array[index]
 
     @staticmethod
     def shuffle(array) -> None:
