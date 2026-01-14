@@ -48,9 +48,6 @@ class PseudoRandom:
             # Добавление последней цифры результата
             number += str(int(magic_result))[-1]
 
-            # Устранение возможных ведущих нулей
-            number = str(int(number))
-
             # Если нет seed, нужна задержка, чтобы время изменилось (т.к. entropy - время)
             if not is_seeded:
                 sleep(0.0001)
@@ -60,7 +57,9 @@ class PseudoRandom:
     @staticmethod
     def random() -> float:
         """Возвращает случайное число с плавающей точкой в диапазоне [0.0, 1.0)."""
-        return float("0."+str(PseudoRandom.get_random_number(16)))
+        raw_int = PseudoRandom.get_random_number(16)
+        raw_str = str(raw_int).zfill(16)
+        return float("0." + raw_str)
 
     @staticmethod
     def random_from_range(start: int, end: int) -> int:
