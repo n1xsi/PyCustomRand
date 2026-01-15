@@ -1,5 +1,6 @@
 from .custom_round import true_round
 from time import sleep, time_ns
+from typing import Any
 
 
 class PseudoRandom:
@@ -67,7 +68,7 @@ class PseudoRandom:
         return true_round((end - start) * (PseudoRandom.random()) + start)
 
     @staticmethod
-    def random_from_float_range(start, end) -> float:
+    def random_from_float_range(start: int | float, end: int | float) -> float:
         """
         Возвращает случайно выбранное число с плавающей точкой из диапазона [start, end)
 
@@ -76,7 +77,7 @@ class PseudoRandom:
         return ((end-start) * (PseudoRandom.random()) + start)
 
     @staticmethod
-    def choice(array) -> None:
+    def choice(array: list[Any]) -> Any:
         """Возвращает случайно выбранный элемент из массива."""
         if not array:
             return None
@@ -84,7 +85,7 @@ class PseudoRandom:
         return array[index]
 
     @staticmethod
-    def shuffle(array) -> None:
+    def shuffle(array: list[Any]) -> None:
         """Перемешивает массив на месте."""
         limit = len(array)-1
         for _ in range(len(array)*2):
