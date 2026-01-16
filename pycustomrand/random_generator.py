@@ -77,6 +77,11 @@ class PseudoRandom:
         return ((end-start) * (PseudoRandom.random()) + start)
 
     @staticmethod
+    def random_bytes(count: int) -> bytes:
+        """Возвращает случайные байты в количестве count."""
+        return bytes([PseudoRandom.random_from_range(0, 255) for _ in range(count)])
+
+    @staticmethod
     def choice(array: list[Any]) -> Any:
         """Возвращает случайно выбранный элемент из массива."""
         if not array:
