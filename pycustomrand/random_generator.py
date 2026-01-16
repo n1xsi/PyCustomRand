@@ -27,7 +27,7 @@ class PseudoRandom:
         return (current_seed * 22695477 + 1) & 0xFFFFFFFF
 
     @classmethod
-    def get_random_number(cls, length: int = 1) -> int:
+    def gen_random_number(cls, length: int = 1) -> int:
         """Генерация псевдослучайного числа заданной длины."""
         number = ''
         while len(number) != length:
@@ -58,13 +58,13 @@ class PseudoRandom:
     @staticmethod
     def random() -> float:
         """Возвращает случайное число с плавающей точкой в диапазоне [0.0, 1.0)."""
-        raw_int = PseudoRandom.get_random_number(16)
+        raw_int = PseudoRandom.gen_random_number(16)
         raw_str = str(raw_int).zfill(16)
         return float("0." + raw_str)
 
     @staticmethod
     def random_from_range(start: int, end: int) -> int:
-        """Возвращает случайно выбранный элемент из диапазона [start, end)."""
+        """Возвращает случайно выбранный элемент из диапазона [start, end]."""
         return true_round((end - start) * (PseudoRandom.random()) + start)
 
     @staticmethod
