@@ -163,6 +163,15 @@ class PseudoRandom:
         z0 =  sqrt(-2.0 * log(u1)) * cos(2.0 * pi * u2)
         return z0 * sigma + mu
 
+    @staticmethod
+    def expovariate(lambd: float = 1.0) -> float:
+        """
+        Возвращает случайное число с экспоненциальным распределением.
+
+        lambd - параметр интенсивности (должен быть не 0).
+        """
+        return -log(1 - PseudoRandom.random()) / lambd
+
 
     # -------------------- Байтовые функции --------------------
 
