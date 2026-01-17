@@ -7,10 +7,13 @@ class PseudoRandom:
     # Переменная класса для хранения seed генератора псевдослучайных чисел
     _seed = None
 
+
+    # -------------------- Основные функции генерации случайных чисел --------------------
+
     @classmethod
-    def set_seed(cls, seed=None) -> None:
+    def set_seed(cls, seed: Any = None) -> None:
         """
-        Установка нового значения seed для генератора псевдослучайных чисел.
+        Установка нового значения seed.
 
         seed - любой объект, который можно преобразовать в строку.
         """
@@ -19,9 +22,8 @@ class PseudoRandom:
 
     @staticmethod
     def _get_next_seed_state(current_seed: int) -> int:
-        """ 
-        Вспомогательная функция - меняет состояние зерна.
-        Используется линейный конгруэнтный метод для сильного изменения зерна на каждом шаге.
+        """
+        Вспомогательная функция - меняет состояние зерна с помощью линейного конгруэнтного метода.
         (Константы взяты из Borland C/C++ runtime library.)
         """
         return (current_seed * 22695477 + 1) & 0xFFFFFFFF
@@ -62,10 +64,16 @@ class PseudoRandom:
         raw_str = str(raw_int).zfill(16)
         return float("0." + raw_str)
 
+
+    # -------------------- Числовые функции --------------------
+
     @staticmethod
     def random_from_range(start: int, end: int) -> int:
         """Возвращает случайно выбранный элемент из диапазона [start, end]."""
         return true_round((end - start) * (PseudoRandom.random()) + start)
+
+
+    # -------------------- Функции для чисел с плавающей точкой --------------------
 
     @staticmethod
     def random_from_float_range(start: int | float, end: int | float) -> float:
@@ -76,10 +84,16 @@ class PseudoRandom:
         """
         return ((end-start) * (PseudoRandom.random()) + start)
 
+
+    # -------------------- Байтовые функции --------------------
+
     @staticmethod
     def random_bytes(count: int) -> bytes:
         """Возвращает случайные байты в количестве count."""
         return bytes([PseudoRandom.random_from_range(0, 255) for _ in range(count)])
+
+
+    # -------------------- Функции для последовательностей --------------------
 
     @staticmethod
     def choice(array: list[Any]) -> Any:
