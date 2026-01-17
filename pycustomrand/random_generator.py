@@ -1,4 +1,5 @@
 from .custom_round import true_round
+from math import sqrt, log, cos, pi
 from time import sleep, time_ns
 from typing import Any
 
@@ -147,6 +148,21 @@ class PseudoRandom:
             cutoff = 1.0 - cutoff
             low, high = high, low
         return low + (high - low) * (uniform * cutoff) ** 0.5
+
+    @staticmethod
+    def gauss(mu: float = 0.0, sigma: float = 1.0) -> float:
+        """
+        Возвращает случайное число с нормальным (гауссовым) распределением.
+        Алгоритм Бокса-Мюллера.
+
+        mu - среднее значение, центр колокола (математическое ожидание).
+        sigma - стандартное отклонение, ширина колокола.
+        """
+        u1 = PseudoRandom.random()
+        u2 = PseudoRandom.random()
+        z0 =  sqrt(-2.0 * log(u1)) * cos(2.0 * pi * u2)
+        return z0 * sigma + mu
+
 
     # -------------------- Байтовые функции --------------------
 
