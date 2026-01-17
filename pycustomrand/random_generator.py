@@ -154,6 +154,26 @@ class PseudoRandom:
         return array[index]
 
     @staticmethod
+    def choices(array: list[Any], k: int, weights: list[int] = None) -> list[Any]:
+        """
+        Возвращает список из k случайных элементов из массива (с повторениями).
+
+        weights - список с весами для каждого элемента массива (соответствует по индексу).
+        Если None - все элементы считаются равными (по 1 весу).
+        """
+        if weights is None:
+            weights = [1] * len(array)
+
+        if len(array) != len(weights):
+            raise ValueError("Длина массива и длина weights должны быть равны")
+
+        weighted_array = []
+        for item, weight in zip(array, weights):
+            weighted_array.extend([item] * weight)
+
+        return [PseudoRandom.choice(weighted_array) for _ in range(k)]
+
+    @staticmethod
     def shuffle(array: list[Any]) -> None:
         """Перемешивает массив на месте."""
         limit = len(array)-1
