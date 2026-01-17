@@ -15,10 +15,12 @@ class PseudoRandom:
         """
         Установка нового значения seed.
 
-        seed - любой объект, который можно преобразовать в строку.
+        seed - любой объект, который преобразуется в строку. Если None - сброс на время (time_ns()).
         """
         if seed is not None:
             cls._seed = sum(map(ord, str(seed)))
+        else:
+            cls._seed = None
 
     @staticmethod
     def _get_next_seed_state(current_seed: int) -> int:
