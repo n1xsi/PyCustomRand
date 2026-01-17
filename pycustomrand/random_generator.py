@@ -78,13 +78,17 @@ class PseudoRandom:
     # -------------------- Функции для чисел с плавающей точкой --------------------
 
     @staticmethod
-    def random_from_float_range(start: int | float, end: int | float) -> float:
+    def random_float(start: int | float, end: int | float, digits: int = None) -> float:
         """
-        Возвращает случайно выбранное число с плавающей точкой из диапазона [start, end)
+        Возвращает случайно выбранное число с плавающей точкой из диапазона [start, end).
 
-        start, end - могут быть как целыми числами, так и числами с плавающей точкой
+        start, end - могут быть как целыми числами, так и числами с плавающей точкой.
+        digits - количество знаков после запятой в возвращаемом числе. Если None - без округления.
         """
-        return ((end-start) * (PseudoRandom.random()) + start)
+        result = (end-start) * (PseudoRandom.random()) + start
+        if digits is not None:
+            return true_round(result, digits)
+        return result
 
 
     # -------------------- Байтовые функции --------------------
