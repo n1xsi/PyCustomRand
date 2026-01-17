@@ -134,7 +134,6 @@ class PseudoRandom:
             return true_round(result, digits)
         return result
 
-
     # -------------------- Байтовые функции --------------------
 
     @staticmethod
@@ -210,3 +209,22 @@ class PseudoRandom:
                 result.append(choice)
 
         return result
+
+
+    # -------------------- Дискретные функции --------------------
+
+    @staticmethod
+    def binomialvariate(n: int = 1, p: float = 0.5) -> int:
+        """
+        Возвращает случайное число, распределённое по биномиальному закону.
+        Простейшая реализация, неоптимизированная.
+
+        n - количество испытаний (целое число >= 0).
+        p - вероятность успеха в каждом испытании (0.0 <= p <= 1.0).
+        """
+        if n < 0:
+            raise ValueError("Количество испытаний n не может быть отрицательным")
+        if not (0.0 <= p <= 1.0):
+            raise ValueError("Вероятность p должна быть в диапазоне [0, 1]")
+
+        return sum([PseudoRandom.random() < p for _ in range(n)])
