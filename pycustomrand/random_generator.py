@@ -140,7 +140,7 @@ class PseudoRandom:
     @staticmethod
     def random_bytes(count: int) -> bytes:
         """Возвращает случайные байты в количестве count."""
-        return bytes([PseudoRandom.random_from_range(0, 255) for _ in range(count)])
+        return bytes([PseudoRandom.random_integer(0, 255) for _ in range(count)])
 
 
     # -------------------- Функции для последовательностей --------------------
@@ -150,7 +150,7 @@ class PseudoRandom:
         """Возвращает случайно выбранный элемент из массива."""
         if not array:
             return None
-        index = int(PseudoRandom.random() * len(array))
+        index = PseudoRandom.randrange(len(array))
         return array[index]
 
     @staticmethod
@@ -158,5 +158,6 @@ class PseudoRandom:
         """Перемешивает массив на месте."""
         limit = len(array)-1
         for _ in range(len(array)*2):
-            x1, x2 = PseudoRandom.random_from_range(0, limit), PseudoRandom.random_from_range(0, limit)
+            x1 = PseudoRandom.randrange(limit)
+            x2 = PseudoRandom.randrange(limit)
             array[x1], array[x2] = array[x2], array[x1]
