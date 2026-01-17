@@ -134,6 +134,20 @@ class PseudoRandom:
             return true_round(result, digits)
         return result
 
+    @staticmethod
+    def triangular(low: float = 0.0, high: float = 1.0, mode: float = None) -> float:
+        """
+        Возвращает случайное число с треугольным распределением в диапазоне [low, high].
+        Чаще всего выпадает значение около mode (вершина треугольника).
+        """
+        uniform = PseudoRandom.random()
+        cutoff = 0.5 if mode is None else (mode - low) / (high - low)
+        if uniform > cutoff:
+            uniform = 1.0 - uniform
+            cutoff = 1.0 - cutoff
+            low, high = high, low
+        return low + (high - low) * (uniform * cutoff) ** 0.5
+
     # -------------------- Байтовые функции --------------------
 
     @staticmethod
