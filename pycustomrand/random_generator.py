@@ -73,8 +73,8 @@ class PseudoRandom:
     def randrange(start: int, stop: int = None, step: int = 1) -> int:
         """
         Возвращает случайное число из диапазона [start, stop).
-        Верхняя граница НЕ включается.
-        
+        Верхняя граница НЕ включается. Можно указывать один аргумент.
+
         Примеры:
         randrange(10) -> от 0 до 9
         randrange(1, 10) -> от 1 до 9
@@ -84,13 +84,38 @@ class PseudoRandom:
             # Если передан один аргумент, например randrange(10), то считаем его за stop, а start за 0
             stop = start
             start = 0
-        
+
         range_object = range(start, stop, step)
-        
+
         if not range_object:
             raise ValueError("Пустой диапазон для генерации")
-        
+
         return range_object[int(PseudoRandom.random() * len(range_object))]
+
+    @staticmethod
+    def random_integer(start: int, end: int = None, step: int = 1) -> int:
+        """
+        Возвращает случайное число из диапазона [start, end].
+        Включительны и обязательны обе границы.
+
+        step (опциональный аргумент) - число должно делиться на step (относительно start)
+        """
+        if step == 0:
+            raise ValueError("Step (шаг) не может быть равен 0")
+
+        # Длина диапазона
+        width = end - start
+
+        # Количество шагов = (разница / шаг) + 1
+        n_steps = int(width / step) + 1
+
+        if n_steps <= 0:
+            raise ValueError("Неверные границы диапазона для заданного шага")
+
+        # Выбор случайного индекса шага
+        random_step_index = int(PseudoRandom.random() * n_steps)
+
+        return start + (random_step_index * step)
 
 
     # -------------------- Функции для чисел с плавающей точкой --------------------
