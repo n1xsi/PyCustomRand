@@ -70,9 +70,27 @@ class PseudoRandom:
     # -------------------- Числовые функции --------------------
 
     @staticmethod
-    def random_from_range(start: int, end: int) -> int:
-        """Возвращает случайно выбранный элемент из диапазона [start, end]."""
-        return true_round((end - start) * (PseudoRandom.random()) + start)
+    def randrange(start: int, stop: int = None, step: int = 1) -> int:
+        """
+        Возвращает случайное число из диапазона [start, stop).
+        Верхняя граница НЕ включается.
+        
+        Примеры:
+        randrange(10) -> от 0 до 9
+        randrange(1, 10) -> от 1 до 9
+        randrange(0, 10, 2) -> чётное число от 0 до 8
+        """
+        if stop is None:
+            # Если передан один аргумент, например randrange(10), то считаем его за stop, а start за 0
+            stop = start
+            start = 0
+        
+        range_object = range(start, stop, step)
+        
+        if not range_object:
+            raise ValueError("Пустой диапазон для генерации")
+        
+        return range_object[int(PseudoRandom.random() * len(range_object))]
 
 
     # -------------------- Функции для чисел с плавающей точкой --------------------
