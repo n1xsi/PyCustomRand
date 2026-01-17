@@ -161,3 +161,32 @@ class PseudoRandom:
             x1 = PseudoRandom.randrange(limit)
             x2 = PseudoRandom.randrange(limit)
             array[x1], array[x2] = array[x2], array[x1]
+
+    @staticmethod
+    def sample(array: list[Any], k: int, counts: list[int] = None) -> list[Any]:
+        """
+        Возвращает список из k уникальных случайных элементов из массива.
+
+        counts - список с количеством повторений для каждого элемента массива (соответствует по индексу).
+        Если None - все элементы считаются равными (по 1 повторению).
+        """
+        if counts is None:
+            counts = [1] * len(array)
+
+        if len(array) != len(counts):
+            raise ValueError("Длина массива и длина counts должны быть равны")
+
+        weighted_array = []
+        for item, count in zip(array, counts):
+            weighted_array.extend([item] * count)
+
+        if k > len(set(weighted_array)):
+            raise ValueError("k не может быть больше количества уникальных элементов в массиве с учётом counts")
+
+        result = []
+        while len(result) < k:
+            choice = PseudoRandom.choice(weighted_array)
+            if choice not in result:
+                result.append(choice)
+
+        return result
