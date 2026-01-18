@@ -259,3 +259,38 @@ class PseudoRandom:
             raise ValueError("Вероятность p должна быть в диапазоне [0, 1]")
 
         return sum([PseudoRandom.random() < p for _ in range(n)])
+
+    # -------------------- Вспомогательные функции --------------------
+
+    @staticmethod
+    def random_bool(true_chance: float = 0.5) -> bool:
+        """Возвращает True/False с вероятностью true_chance."""
+        return PseudoRandom.random() < true_chance
+
+    @staticmethod
+    def random_uuid4() -> str:
+        """
+        Возвращает случайный UUID версии 4
+
+        Пример: 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
+        """
+        # Генерирация 32 hex-цифры
+        chars = [hex(PseudoRandom.random_integer(0, 15))[2:]
+                 for _ in range(32)]
+
+        # Согласно стандарту UUID v4:
+        chars[12] = '4'  # 13-й символ всегда '4'
+        # 17-й символ должен быть одним из '8', '9', 'a', 'b'
+        chars[16] = hex(PseudoRandom.choice([8, 9, 10, 11]))[2:]
+
+        return f"{''.join(chars[:8])}-{''.join(chars[8:12])}-{''.join(chars[12:16])}-{''.join(chars[16:20])}-{''.join(chars[20:])}"
+
+    @staticmethod
+    def random_color_hex() -> str:
+        """
+        Возвращает случайный цвет в формате hex.
+
+        Пример: '#ff0000'
+        """
+        val = PseudoRandom.random_integer(0, 0xFFFFFF)
+        return f"#{hex(val)[2:].zfill(6)}"
