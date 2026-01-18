@@ -8,7 +8,6 @@ class PseudoRandom:
     # Переменная класса для хранения seed генератора псевдослучайных чисел
     _seed = None
 
-
     # -------------------- Основные функции генерации случайных чисел --------------------
 
     @classmethod
@@ -67,7 +66,6 @@ class PseudoRandom:
         raw_str = str(raw_int).zfill(16)
         return float("0." + raw_str)
 
-
     # -------------------- Числовые функции --------------------
 
     @staticmethod
@@ -118,7 +116,6 @@ class PseudoRandom:
 
         return start + (random_step_index * step)
 
-
     # -------------------- Функции для чисел с плавающей точкой --------------------
 
     @staticmethod
@@ -160,7 +157,7 @@ class PseudoRandom:
         """
         u1 = PseudoRandom.random()
         u2 = PseudoRandom.random()
-        z0 =  sqrt(-2.0 * log(u1)) * cos(2.0 * pi * u2)
+        z0 = sqrt(-2.0 * log(u1)) * cos(2.0 * pi * u2)
         return z0 * sigma + mu
 
     @staticmethod
@@ -172,14 +169,12 @@ class PseudoRandom:
         """
         return -log(1 - PseudoRandom.random()) / lambd
 
-
     # -------------------- Байтовые функции --------------------
 
     @staticmethod
     def random_bytes(count: int) -> bytes:
         """Возвращает случайные байты в количестве count."""
         return bytes([PseudoRandom.random_integer(0, 255) for _ in range(count)])
-
 
     # -------------------- Функции для последовательностей --------------------
 
@@ -214,11 +209,9 @@ class PseudoRandom:
     @staticmethod
     def shuffle(array: list[Any]) -> None:
         """Перемешивает массив на месте."""
-        limit = len(array)-1
-        for _ in range(len(array)*2):
-            x1 = PseudoRandom.randrange(limit)
-            x2 = PseudoRandom.randrange(limit)
-            array[x1], array[x2] = array[x2], array[x1]
+        for i in range(len(array) - 1, 0, -1):
+            j = PseudoRandom.randrange(i + 1)
+            array[i], array[j] = array[j], array[i]
 
     @staticmethod
     def sample(array: list[Any], k: int, counts: list[int] = None) -> list[Any]:
@@ -248,7 +241,6 @@ class PseudoRandom:
                 result.append(choice)
 
         return result
-
 
     # -------------------- Дискретные функции --------------------
 
