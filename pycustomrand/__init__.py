@@ -1,3 +1,3 @@
 # Делает класс PseudoRandom доступным при импорте пакета
-# Пример: from chronorand import PseudoRandom
+# Пример: from pycustomrand import PseudoRandom
 from .random_generator import PseudoRandom
