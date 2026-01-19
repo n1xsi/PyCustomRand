@@ -5,15 +5,15 @@ from typing import Any
 
 
 class PseudoRandom:
-    # Переменная класса для хранения seed генератора псевдослучайных чисел
+    # Переменная класса для хранения зерна генератора (seed) псевдослучайных чисел
     _seed = None
 
-    # -------------------- Основные функции генерации случайных чисел --------------------
+    # -------------------- Основные функции генератора --------------------
 
     @classmethod
     def set_seed(cls, seed: Any = None) -> None:
         """
-        Установка нового значения seed.
+        Установка нового значения зерна (seed).
 
         seed - любой объект, который преобразуется в строку. Если None - сброс на время (time_ns()).
         """
@@ -25,8 +25,8 @@ class PseudoRandom:
     @staticmethod
     def _get_next_seed_state(current_seed: int) -> int:
         """
-        Вспомогательная функция - меняет состояние зерна с помощью линейного конгруэнтного метода.
-        (Константы взяты из Borland C/C++ runtime library.)
+        Вспомогательная функция - меняет состояние зерна (seed) с помощью линейного конгруэнтного метода.
+        Константы взяты из Borland C/C++ runtime library.
         """
         return (current_seed * 22695477 + 1) & 0xFFFFFFFF
 
@@ -39,7 +39,7 @@ class PseudoRandom:
             if cls._seed is not None:
                 is_seeded = True
                 current_entropy = cls._seed
-                # Обновление seed для следующей итерации (цифры), иначе результат будет одинаковым
+                # Обновление seed для следующей итерации (цифры), иначе результат генерации будет одинаковым
                 cls._seed = cls._get_next_seed_state(cls._seed)
             else:
                 is_seeded = False
@@ -53,9 +53,9 @@ class PseudoRandom:
             # Добавление последней цифры результата
             number += str(int(magic_result))[-1]
 
-            # Если нет seed, нужна задержка, чтобы время изменилось (т.к. entropy - время)
+            # Если нет seed, то entropy - время, поэтому нужна задержка для случайности выпадения чисел
             if not is_seeded:
-                sleep(0.0001)
+                sleep(0.0000001)
 
         return int(number)
 
@@ -100,18 +100,14 @@ class PseudoRandom:
         step (опциональный аргумент) - число должно делиться на step (относительно start)
         """
         if step == 0:
-            raise ValueError("Step (шаг) не может быть равен 0")
+            raise ValueError("Шаг (step) не может быть равен 0")
 
-        # Длина диапазона
         width = end - start
-
-        # Количество шагов = (разница / шаг) + 1
         n_steps = int(width / step) + 1
 
         if n_steps <= 0:
             raise ValueError("Неверные границы диапазона для заданного шага")
 
-        # Выбор случайного индекса шага
         random_step_index = int(PseudoRandom.random() * n_steps)
 
         return start + (random_step_index * step)
@@ -183,8 +179,7 @@ class PseudoRandom:
         """Возвращает случайно выбранный элемент из массива."""
         if not array:
             return None
-        index = PseudoRandom.randrange(len(array))
-        return array[index]
+        return array[PseudoRandom.randrange(len(array))]
 
     @staticmethod
     def choices(array: list[Any], k: int, weights: list[int] = None) -> list[Any]:
@@ -248,7 +243,7 @@ class PseudoRandom:
     def binomialvariate(n: int = 1, p: float = 0.5) -> int:
         """
         Возвращает случайное число, распределённое по биномиальному закону.
-        Простейшая реализация, неоптимизированная.
+        Простейшая реализация (неоптимизированная).
 
         n - количество испытаний (целое число >= 0).
         p - вероятность успеха в каждом испытании (0.0 <= p <= 1.0).
@@ -275,8 +270,7 @@ class PseudoRandom:
         Пример: 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
         """
         # Генерирация 32 hex-цифры
-        chars = [hex(PseudoRandom.random_integer(0, 15))[2:]
-                 for _ in range(32)]
+        chars = [hex(PseudoRandom.random_integer(0, 15))[2:] for _ in range(32)]
 
         # Согласно стандарту UUID v4:
         chars[12] = '4'  # 13-й символ всегда '4'
