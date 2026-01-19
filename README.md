@@ -1,7 +1,12 @@
-# PyCustomRand
+<div align="center">
 
-[![Python](https://img.shields.io/badge/Made%20with-Python-blue.svg)](https://www.python.org/)
-[![Last Commit](https://img.shields.io/github/last-commit/n1xsi/pycustomrand.svg)](https://github.com/n1xsi/pycustomrand/commits/main)
+  # PyCustomRand
+  
+  ![Python](https://custom-icon-badges.demolab.com/badge/Python-3.8+-blue?logo=pythonn)
+  [![Last Commit](https://img.shields.io/github/last-commit/n1xsi/pycustomrand.svg)](https://github.com/n1xsi/pycustomrand/commits/main)
+  [![Run Tests](https://github.com/n1xsi/PyCustomRand/actions/workflows/python-app.yml/badge.svg)](https://github.com/n1xsi/PyCustomRand/actions/workflows/python-app.yml)
+
+</div>
 
 **PyCustomRand** — это Python-библиотека для генерации **псевдослучайных чисел**, основанная на алгоритме, использующем системное время с наносекундной точностью (time-based).
 Проект также включает в себя кастомную реализацию математического (а не банковского) округления.
