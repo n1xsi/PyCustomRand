@@ -36,7 +36,7 @@ pip install pycustomrand
 ```
 
 <details>
-  <summary>Альтернативные способы</summary>
+  <summary>➕ Альтернативные способы</summary>
 
   <br>
   
@@ -51,23 +51,23 @@ pip install pycustomrand
 
 ## Пример использования
 ```python
-from pycustomrand import * 
+import pycustomrand as pcr 
 
 # Генерация 8-значного случайного числа
-random_number = gen_random_number(8)
+random_number = pcr.gen_random_number(8)
 print(f"Случайное число: {random_number}")
 
 # Генерация float в диапазоне [0, 1)
-random_float = random()
+random_float = pcr.random()
 print(f"Случайный float: {random_float}")
 
 # Выбор случайного элемента из списка
 my_list = ['яблоко', 'банан', 'вишня']
-random_choice = choice(my_list)
+random_choice = pcr.choice(my_list)
 print(f"Случайный выбор: {random_choice}")
 
 # Перемешивание списка
-shuffle(my_list)
+pcr.shuffle(my_list)
 print(f"Перемешанный список: {my_list}")
 ```
 
