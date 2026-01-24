@@ -34,6 +34,7 @@ sample = PseudoRandom.sample
 triangular = PseudoRandom.triangular
 gauss = PseudoRandom.gauss
 expovariate = PseudoRandom.expovariate
+binomialvariate = PseudoRandom.binomialvariate
 binomial = PseudoRandom.binomialvariate
 
 # Утилиты
@@ -63,6 +64,7 @@ __all__ = [
     "gauss",
     "expovariate",
     "binomial",
+    "binomialvariate",
     "random_bool",
     "random_uuid4",
     "random_color_hex"
