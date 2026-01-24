@@ -77,20 +77,20 @@ pip install pycustomrand
 ```
 
 <details>
-  <summary>➕ Альтернативные способы</summary>
+  <summary>➕ Альтернативные способы установки</summary>
 
   <br>
 
-  * На официальной странице PyPI:
+  * Скачивание пакета на официальной странице PyPI:
   https://pypi.org/project/pycustomrand/#files
-  
+
+  *  Скачивание пакета **напрямую** в разделе *Releases*:
+  https://github.com/n1xsi/PyCustomRand/releases
+
   *  Клонирование репозитория:
   ```bash
   git clone https://github.com/n1xsi/PyCustomRand.git
   ```
-
-  *  Скачивание пакета напрямую в разделе *Releases*:
-  https://github.com/n1xsi/PyCustomRand/releases
 </details>
 
 ## 💡 Пример использования
