@@ -100,8 +100,4 @@ class TestTrueRound(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    # Запуск конкретного теста:
-    # unittest.main(defaultTest='TestTrueRound.test_negative_numbers')
-
-    # Запуск всех тестов:
     unittest.main()
