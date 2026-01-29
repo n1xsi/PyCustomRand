@@ -3,7 +3,7 @@ from .random_generator import PseudoRandom
 from .custom_round import true_round
 
 # Версия пакета
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 
 # -------------------- Алиасы --------------------
