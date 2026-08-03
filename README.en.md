@@ -1,23 +1,27 @@
-<div align="center">
+<h1 align="center">
 
-  # PyCustomRand
+  PyCustomRand
   
   ![Python](https://custom-icon-badges.demolab.com/badge/Python-3.8+-blue?logo=pythonn)
   [![Last Commit](https://img.shields.io/github/last-commit/n1xsi/pycustomrand.svg)](https://github.com/n1xsi/pycustomrand/commits/main)
   [![Run Tests](https://github.com/n1xsi/PyCustomRand/actions/workflows/python-app.yml/badge.svg)](https://github.com/n1xsi/PyCustomRand/actions/workflows/python-app.yml)
 
-</div>
+</h1>
 
-🌐 **Languages:**
+<div align="center">
+
+🌐 **Readme languages:**
 🇷🇺 <a href="README.md">Русский</a> | *🇬🇧 English*
+
+</div>
 
 <br>
 
-**PyCustomRand** is a Python library for generating **pseudo-random numbers**, based on an algorithm that utilizes system time with nanosecond precision.
+**PyCustomRand** is a self‑written Python library for generating **pseudo-random numbers**, based on an algorithm that utilizes system time with nanosecond precision.
 
 This author's project was created to study algorithms and alternative approaches to random number generation and rounding.
-I was not satisfied with the fact that Python's standard `random` module generates insufficiently random numbers (*especially during multiple sequential generations*), and the built-in `round` module rounds
-numbers rather "roughly" ( *`round(1.5)` = 2 and at the same time `round(2.5)` = 2* ). Therefore, I decided to write *my own* library for pseudo-random number generation — simpler and with higher entropy.
+I was not satisfied with the fact that Python's standard `random` module generates insufficiently random numbers ( *especially during multiple sequential generations* ), and the built-in `round` module rounds
+numbers rather "roughly" ( *`round(1.5)` = 2 and at the same time `round(2.5)` = 2* ). Therefore, I decided to write *my own* library for pseudo-random number generation — simpler, with higher entropy and proper mathematical rounding.
 
 > [!WARNING]
 > PyCustomRand is *currently* **not** a cryptographically secure library and is **not intended** for use in security systems!
