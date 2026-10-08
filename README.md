@@ -1,19 +1,21 @@
 <h1 align="center">
 
   PyCustomRand
-  
-  ![Python](https://custom-icon-badges.demolab.com/badge/Python-3.8+-blue?logo=pythonn)
+
+  [![PyPI](https://img.shields.io/pypi/v/pycustomrand.svg?logo=pypi&logoColor=white)](https://pypi.org/project/pycustomrand/)
+  [![Python](https://img.shields.io/pypi/pyversions/pycustomrand.svg?logo=python&logoColor=white)](https://pypi.org/project/pycustomrand/) <br>
+  [![Downloads](https://img.shields.io/pypi/dm/pycustomrand.svg?logo=pypi&logoColor=white)](https://pypi.org/project/pycustomrand/)
   [![Last Commit](https://img.shields.io/github/last-commit/n1xsi/pycustomrand.svg)](https://github.com/n1xsi/pycustomrand/commits/main)
   [![Run Tests](https://github.com/n1xsi/PyCustomRand/actions/workflows/python-app.yml/badge.svg)](https://github.com/n1xsi/PyCustomRand/actions/workflows/python-app.yml)
 
 </h1>
 
-<div align="center">
+<h2 align="center">
 
-🌐**Readme languages:**
-*🇷🇺 Русский* | <a href="README.en.md">🇬🇧 English</a>
+  🌐**Readme languages:**
+  *🇷🇺 Русский* | <a href="README.en.md">🇬🇧 English</a>
 
-</div>
+</h2>
 
 <br>
 
@@ -389,13 +391,17 @@ if __name__ == "__main__":
 PyCustomRand/                # Корень репозитория
 ├── .github/
 │   └── workflows/
-│       └── python-app.yml   # Конфигурация GH Actions: автоматический запуск тестов при каждом Push/PR
+│       ├── python-app.yml   # Конфигурация GH Actions: автоматический запуск тестов при каждом Push/PR
+│       └── release.yml      # Release pipeline: проверка версии → тесты → сборка → TestPyPI → PyPI → GitHub Release
 │
 ├── pycustomrand/            # Исходный код пакета
 │   ├── __init__.py            # Точка входа: инициализация пакета и алиасы функций
 │   ├── custom_round.py        # Реализация алгоритма математического округления (true_round)
 │   ├── diagnostics.py         # Декоратор для проверки равномерности распределения чисел
 │   └── random_generator.py    # Ядро библиотеки: класс PseudoRandom и вся логика генерации
+│
+├── scripts/                 # Скрипты для разработчика
+│   └── prepare_pypi_readme.py # Подготовка README к публикации на PyPI
 │
 ├── tests/                   # Набор Unit-тестов
 │   ├── __init__.py            # Пустой файл (чтобы тесты видели друг друга)
@@ -426,7 +432,7 @@ PyCustomRand/                # Корень репозитория
 ## 📄 Лицензия
 Этот проект является программным обеспечением с открытым исходным кодом и распространяется под лицензией **MIT License**.
 
-    Copyright © 2025 Ivan (n1xsi)
+    Copyright © 2026 Ivan (n1xsi)
 
     Данная лицензия разрешает любому лицу получать копию данного программного обеспечения и сопутствующей документации бесплатно,
     использовать его без ограничений, включая право копировать, модифицировать, публиковать и распространять копии ПО.

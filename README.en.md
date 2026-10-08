@@ -1,19 +1,21 @@
 <h1 align="center">
 
   PyCustomRand
-  
-  ![Python](https://custom-icon-badges.demolab.com/badge/Python-3.8+-blue?logo=pythonn)
+
+  [![PyPI](https://img.shields.io/pypi/v/pycustomrand.svg?logo=pypi&logoColor=white)](https://pypi.org/project/pycustomrand/)
+  [![Python](https://img.shields.io/pypi/pyversions/pycustomrand.svg?logo=python&logoColor=white)](https://pypi.org/project/pycustomrand/) <br>
+  [![Downloads](https://img.shields.io/pypi/dm/pycustomrand.svg?logo=pypi&logoColor=white)](https://pypi.org/project/pycustomrand/)
   [![Last Commit](https://img.shields.io/github/last-commit/n1xsi/pycustomrand.svg)](https://github.com/n1xsi/pycustomrand/commits/main)
   [![Run Tests](https://github.com/n1xsi/PyCustomRand/actions/workflows/python-app.yml/badge.svg)](https://github.com/n1xsi/PyCustomRand/actions/workflows/python-app.yml)
 
 </h1>
 
-<div align="center">
+<h2 align="center">
 
-🌐 **Readme languages:**
-🇷🇺 <a href="README.md">Русский</a> | *🇬🇧 English*
+  🌐 **Readme languages:**
+  🇷🇺 <a href="README.md">Русский</a> | *🇬🇧 English*
 
-</div>
+</h2>
 
 <br>
 
@@ -382,13 +384,17 @@ The project has the following file structure:
 PyCustomRand/                # Repo root
 ├── .github/
 │   └── workflows/
-│       └── python-app.yml   # GH Actions config: auto-run tests on Push/PR
+│       ├── python-app.yml   # GH Actions config: auto-run tests on Push/PR
+│       └── release.yml      # Release pipeline: check version → tests → build → TestPyPI → PyPI → GitHub Release
 │
 ├── pycustomrand/            # Package source code
 │   ├── __init__.py            # Entry point: package init and aliases
 │   ├── custom_round.py        # Math rounding algorithm (true_round)
 │   ├── diagnostics.py         # Decorator for distribution checking
 │   └── random_generator.py    # Library core: PseudoRandom class and logic
+│
+├── scripts/                 # Scripts for developers
+│   └── prepare_pypi_readme.py # Prepare README for PyPI
 │
 ├── tests/                   # Unit Tests
 │   ├── __init__.py            # Empty file
@@ -419,13 +425,9 @@ Any help in developing the library is welcomed. If you have ideas for improving 
 ## 📄 License
 This project is open-source software distributed under the **MIT License**.
 
-    Copyright © 2025 Ivan (n1xsi)
+    Copyright © 2026 Ivan (n1xsi)
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions: ...
+    This license permits any person to obtain a copy of this software and the accompanying documentation free of charge, to use it without
+    restrictions, including the right to copy, modify, publish, and distribute copies of the software.
 
 The full license text is available in the [LICENSE](LICENSE) file.
