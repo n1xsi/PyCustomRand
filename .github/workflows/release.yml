@@ -1,0 +1,233 @@
+# Автоматический релиз в PyPI
+#
+# Единственное ручное действие для этого: поменять __version__ в 'pycustomrand/__init__.py' + запушить в main
+# Дальше: тесты -> сборка -> TestPyPI -> PyPI -> git-тег и GitHub Release
+#
+# Почему триггер именно бамп версии, а не просто push: PyPI не позволяет перезаписать уже
+# опубликованную версию, а описание пакета (README) вморожено в конкретный релиз.
+# Обновить README на странице пакета без выпуска новой версии технически невозможно.
+
+name: Release
+
+on:
+  push:
+    branches: [main]
+  # Ручной запуск - на случай пересборки, если релиз оборвался на середине
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  PACKAGE_NAME: pycustomrand
+
+jobs:
+  # ------------------------------------------------------------------
+  # Нужен ли релиз: версия в коде без соответствующего тега = да
+  # ------------------------------------------------------------------
+  check:
+    name: Check version
+    runs-on: ubuntu-latest
+    # Чтобы форки не пытались публиковать пакет от своего имени
+    if: github.repository == 'n1xsi/PyCustomRand'
+    outputs:
+      version: ${{ steps.detect.outputs.version }}
+      should_release: ${{ steps.detect.outputs.should_release }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Нужна вся история с тегами, чтобы проверить наличие v<version>
+          fetch-depth: 0
+
+      - name: Detect version and decide
+        id: detect
+        run: |
+          set -euo pipefail
+
+          VERSION=$(python - <<'PY'
+          import pathlib, re, sys
+          source = pathlib.Path("pycustomrand/__init__.py").read_text(encoding="utf-8")
+          match = re.search(r'^__version__\s*=\s*["\']([^"\']+)["\']', source, re.M)
+          if not match:
+              sys.exit("Не удалось найти __version__ в pycustomrand/__init__.py")
+          print(match.group(1))
+          PY
+          )
+          echo "Версия в коде: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          REASON=""
+          SHOULD="true"
+
+          # Тег уже есть -> этот релиз уже выпускался
+          if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
+            SHOULD="false"
+            REASON="тег v$VERSION уже существует"
+          fi
+
+          # Версия уже на PyPI -> перезалить нельзя, публикация упала бы с 400
+          if [ "$SHOULD" = "true" ]; then
+            # Без -f: на 404 (версии ещё нет — это норма) curl должен завершиться успешно,
+            # иначе код ответа до нас не доедет
+            CODE=$(curl -sS -o /dev/null -w '%{http_code}' \
+              "https://pypi.org/pypi/${PACKAGE_NAME}/$VERSION/json" || echo "000")
+            echo "PyPI ответил: $CODE"
+            if [ "$CODE" = "200" ]; then
+              SHOULD="false"
+              REASON="версия $VERSION уже опубликована на PyPI"
+            fi
+          fi
+
+          echo "should_release=$SHOULD" >> "$GITHUB_OUTPUT"
+
+          if [ "$SHOULD" = "true" ]; then
+            echo "### Релиз $VERSION" >> "$GITHUB_STEP_SUMMARY"
+            echo "Версия новая — запускаем публикацию." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### Релиз пропущен" >> "$GITHUB_STEP_SUMMARY"
+            echo "Причина: $REASON." >> "$GITHUB_STEP_SUMMARY"
+            echo "Чтобы выпустить релиз, поднимите \`__version__\` в \`pycustomrand/__init__.py\`." \
+              >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  # ------------------------------------------------------------------
+  # Те же тесты, что и на обычном push - матрица не дублируется
+  # ------------------------------------------------------------------
+  test:
+    name: Tests
+    needs: check
+    if: needs.check.outputs.should_release == 'true'
+    uses: ./.github/workflows/python-app.yml
+
+  # ------------------------------------------------------------------
+  # Сборка sdist + wheel с README, подготовленным под PyPI
+  # ------------------------------------------------------------------
+  build:
+    name: Build distributions
+    needs: [check, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Prepare README for PyPI
+        run: python scripts/prepare_pypi_readme.py README.md
+
+      - name: Install build tooling
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+
+      - name: Build
+        run: python -m build
+
+      - name: Verify metadata and artifact names
+        run: |
+          set -euo pipefail
+          twine check --strict dist/*
+
+          VERSION="${{ needs.check.outputs.version }}"
+          # Страховка от расхождения: в артефактах должна быть ровно та версия, что мы релизим
+          for expected in \
+            "dist/${PACKAGE_NAME}-${VERSION}.tar.gz" \
+            "dist/${PACKAGE_NAME}-${VERSION}-py3-none-any.whl"
+          do
+            if [ ! -f "$expected" ]; then
+              echo "Не найден ожидаемый артефакт: $expected"
+              echo "Собрано:"; ls -1 dist/
+              exit 1
+            fi
+          done
+          ls -1 dist/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  # ------------------------------------------------------------------
+  # Репетиция на TestPyPI: видно, как отрендерился README, до необратимой публикации
+  # ------------------------------------------------------------------
+  testpypi:
+    name: Publish to TestPyPI
+    needs: [check, build]
+    runs-on: ubuntu-latest
+    environment: testpypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
+
+  # ------------------------------------------------------------------
+  # Публикация в PyPI. Шаг необратим: версию нельзя перезалить, только yank
+  # ------------------------------------------------------------------
+  pypi:
+    name: Publish to PyPI
+    needs: [check, testpypi]
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  # ------------------------------------------------------------------
+  # Тег и GitHub Release
+  #
+  # Если создать тег до публикации и публикация упадёт, то на повторном прогоне job check
+  # увидит существующий тег и молча пропустит релиз. Публикация в PyPI необратима,
+  # а тег поставить никогда не поздно - поэтому тегируем после успешной загрузки.
+  # ------------------------------------------------------------------
+  github-release:
+    name: Tag and GitHub Release
+    needs: [check, pypi]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          set -euo pipefail
+          # gh сам создаёт тег на текущем коммите
+          gh release create "v$VERSION" \
+            --title "v$VERSION" \
+            --generate-notes \
+            dist/*
+
+          echo "### Опубликовано" >> "$GITHUB_STEP_SUMMARY"
+          echo "- PyPI: https://pypi.org/project/${PACKAGE_NAME}/$VERSION/" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Release: ${{ github.server_url }}/${{ github.repository }}/releases/tag/v$VERSION" \
+            >> "$GITHUB_STEP_SUMMARY"
