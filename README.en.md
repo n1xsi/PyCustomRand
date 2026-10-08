@@ -22,15 +22,14 @@
 **PyCustomRand** is a self‑written Python library for generating **pseudo-random numbers**, based on an algorithm that utilizes system time with nanosecond precision.
 
 This author's project was created to study algorithms and alternative approaches to random number generation and rounding.
-I was not satisfied with the fact that Python's standard `random` module generates insufficiently random numbers ( *especially during multiple sequential generations* ), and the built-in `round` module rounds
-numbers rather "roughly" ( *`round(1.5)` = 2 and at the same time `round(2.5)` = 2* ). Therefore, I decided to write *my own* library for pseudo-random number generation — simpler, with higher entropy and proper mathematical rounding.
+I was not satisfied with the fact that Python's standard `random` module generates insufficiently high-entropy numbers ( *especially during multiple sequential generations* ), and the built-in `round` module rounds numbers rather "roughly" ( *`round(1.5)` = 2 and at the same time `round(2.5)` = 2* ), therefore I decided to write *my own* library — simpler, with higher entropy and mathematical rounding.
 
 > [!WARNING]
 > PyCustomRand is *currently* **not** a cryptographically secure library and is **not intended** for use in security systems!
 > Use the [secrets](https://docs.python.org/3/library/secrets.html#module-secrets) module for such purposes.
 
 ## 📌 Why use this library when Python has its own `random` and `round`?
-PyCustomRand was written as an alternative to these two built-in modules. Here are the main features and capabilities of the library:
+PyCustomRand was written as an alternative to these two built-in modules. Here are the main features and capabilities of the library, compared to them:
 
 *   The library is **simpler** to understand — the entire code is commented, lightweight, and clear. The PRNG (Pseudo-Random Number Generator) implementation is based on a *simple* algorithm using system time, making the library easy to customize, extend, or adapt to your needs.
 *   In most cases, PyCustomRand produces a more *"entropic"* result during sequential generations compared to the built-in `random` module.
@@ -68,17 +67,17 @@ PyCustomRand was written as an alternative to these two built-in modules. Here a
     * <details>
         <summary>📑 List of functions</summary>
       
-        *   Integer generation (`gen_random_number`, `randrange`, `random_integer`).
-        *   Float generation (`random`, `random_float`).
-        *   Statistical distributions: Normal (Gauss), Triangular, Exponential, Binomial.
-        *   Sequence tools: random element selection (`choice`), weighted selection (`choices`), shuffling (`shuffle`), and unique element selection (`sample`).
+        *   Integer generation (`gen_random_number`, `randrange`, `random_integer`);
+        *   Float generation (`random`, `random_float`);
+        *   Statistical distribution functions (`triangular`, `gauss`, `expovariate`, `binomialvariate`);
+        *   Sequence tools: random element selection (`choice`), weighted selection (`choices`), shuffling (`shuffle`), and unique element selection (`sample`);
         *   PRNG sequence initialization ("seeding") (`set_seed`, `_get_next_seed_state`).
       </details>
 *   The library also includes additional utilities useful for web/game development: generation of UUID v4, random HEX colors (e.g., `#ff05a1`), random bytes, random boolean values (`True`/`False`) with customizable probability.
-*   It features a custom rounding module — `true_round`. This function rounds numbers using the standard mathematical method (0.5 is always rounded up by magnitude) and also fixes floating-point errors (e.g., the "2.675 problem").
-*   The code is covered by unit tests (as indicated by the badge at the beginning of the README), and it has a built-in diagnostics module (`check_distribution`) allowing you to check the uniformity of the generator's distribution at any time.
+*   A custom rounding module, `true_round`, rounds numbers using the standard mathematical method (0.5 is always rounded up by magnitude) and also fixes floating-point errors (e.g., the "2.675 problem").
+*   The code is fully covered by unit tests (as indicated by the badge at the beginning of the README), and it has a built-in diagnostics module (`check_distribution`) allowing you to check the uniformity of the generator's distribution at any time.
 
-However, the project does have some downsides:
+It is worth noting that the project still has some minor drawbacks:
 *   Time-based randomness requires a small wait time (`time.sleep()` for 0.1 microseconds), so for massive iterations, PyCustomRand will be slightly slower than the built-in `random` module.
 *   Some functions in PyCustomRand (selection, distributions) are written so simply that they might not be fully optimized for massive samples (plus the accumulating micro-wait mentioned above).
 
@@ -100,9 +99,12 @@ pip install pycustomrand
   * Download the package **directly** from the *Releases* section:
   https://github.com/n1xsi/PyCustomRand/releases
 
-  * Clone the repository:
+  *  Clone the repository and install:
   ```bash
   git clone https://github.com/n1xsi/PyCustomRand.git
+  cd PyCustomRand
+  pip install .
+  # or for development: pip install -e .
   ```
 </details>
 
@@ -188,7 +190,9 @@ from pycustomrand import random, random_float
 print(random())  # Random number in [0, 1), e.g., 0.2260351121787103
 
 print(random_float(0, 10))            # Random float in [0, 10), e.g., 4.014874483651235
-print(random_float(0, 10, digits=3))  # Same, but rounded to 3 decimals, e.g., 6.722
+print(random_float(0, 10, 3))  # Same, but rounded to 3 decimals, e.g., 6.722
+
+print(random_float(1.2, 9.3))         # Example with float numbers in the range [1.2, 9.3), e.g., 5.899369498086576
 ```
 
 </details>
@@ -227,7 +231,7 @@ print(array)    # e.g., ['cherry', 'banana', 'apple', 'orange']
 
 print(sample(array, k=2))  # List of k unique elements, e.g., ['cherry', 'apple']
 print(sample(array, k=2, counts=[1, 2, 3, 4]))  # Unique selection with counts, e.g., ['banana', 'orange']
-# "orange" (with the number in the array of 4) will produce four times more than "apple" (the number in the array of 1)
+# The probability of getting "orange" (with count 4 in the array) is four times higher than "apple" (count 1 in the array)
 ```
 
 </details>
@@ -245,12 +249,12 @@ These functions are used to model real-world processes (physics, economics, game
 
 *   `expovariate(lambd=1.0)` — Exponential distribution.
     Describes the time between events in a Poisson process. Small values appear often, large ones rarely (long tail).
-    Used in timers. *Examples*: Time between bus arrivals, monster spawn times (they usually come up often, but sometimes there are long lulls  ).
+    Used in timers. *Examples*: Time between bus arrivals. Monster spawning (usually they come frequently, but sometimes there are long lulls).
     *   `lambd`: Event intensity (must be > 0).
 
 *   `binomialvariate(n=1, p=0.5)` — Binomial distribution (alias: `binomial`).
     Number of successes in a sequence of `n` independent trials with success probability `p`.
-    *Example*: Number of heads in 10 coin flips — `binomialvariate(n=10, p=0.5)`.
+    Used in mathematics and financial modeling. *Example*: Number of heads in 10 coin flips — `binomialvariate(n=10, p=0.5)`.
 
 <details>
     <summary>🧩 Examples 5</summary>
@@ -337,7 +341,7 @@ python -m unittest tests/test_round.py
 ```
 
 ### 1.2. Running a specific test case
-If you are modifying the library, and you constantly fail to check any one specific test, then you don't have to waste time running all the tests - you just need to run one specific test of a specific module, for example:
+
 ```python
 from tests.test_round import TestTrueRound
 import unittest
