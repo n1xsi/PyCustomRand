@@ -27,11 +27,11 @@ DEFAULT_BRANCH = "main"
 ABSOLUTE_PREFIXES = ("http://", "https://", "//", "#", "mailto:", "data:", "tel:")
 
 ALERT_LABELS = {
-    "NOTE": "ℹ️ Note",
-    "TIP": "💡 Tip",
-    "IMPORTANT": "❗ Important",
-    "WARNING": "⚠️ Warning",
-    "CAUTION": "🔴 Caution",
+    "NOTE": "ℹ️ Note: ",
+    "TIP": "💡 Tip: ",
+    "IMPORTANT": "❗ Important: ",
+    "WARNING": "⚠️ Warning: ",
+    "CAUTION": "🔴 Caution: ",
 }
 
 # Ссылки в Markdown: группы — префикс "!" (картинка), текст, путь, необязательный title
