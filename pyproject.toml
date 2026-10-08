@@ -4,19 +4,41 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pycustomrand"
-version = "0.0.2"
+# Версия берётся из 'pycustomrand/__init__.py', единственный источник истины
+# Бамп версии там же и запускает автоматический релиз (см. '.github/workflows/release.yml')
+dynamic = ["version"]
 authors = [
   { name="Ivan", email="vanyalebedev45@gmail.com" },
 ]
 description = "Библиотека для генерации псевдослучайных чисел на основе времени"
 readme = "README.md"
 requires-python = ">=3.8"
+keywords = ["random", "pseudorandom", "prng", "seed", "entropy", "round", "rounding"]
 classifiers = [
-    "Programming Language :: Python :: 3",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 [project.urls]
 "Homepage" = "https://github.com/n1xsi/PyCustomRand"
+"Documentation" = "https://github.com/n1xsi/PyCustomRand#-документация"
 "Bug Tracker" = "https://github.com/n1xsi/PyCustomRand/issues"
+"Changelog" = "https://github.com/n1xsi/PyCustomRand/releases"
+
+[tool.setuptools]
+# Явный список вместо автоопределения: гарантия, что при установке пакета
+# в site-packages попадёт только pycustomrand, а не tests (в sdist тесты остаются — это норма)
+packages = ["pycustomrand"]
+
+[tool.setuptools.dynamic]
+version = { attr = "pycustomrand.__version__" }
