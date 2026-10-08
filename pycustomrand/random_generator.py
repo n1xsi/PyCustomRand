@@ -1,3 +1,6 @@
+# Позволяет писать list[Any] и int | float, сохраняя работоспособность на Python 3.8 и 3.9
+from __future__ import annotations
+
 from .custom_round import true_round
 from math import sqrt, log, cos, pi
 from time import sleep, time_ns
